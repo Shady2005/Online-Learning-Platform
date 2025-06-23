@@ -2,52 +2,67 @@
 session_start();
 include("database.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = $_POST['id'];
+if (isset($_POST['login'])) {
+    $username = $_POST['Name'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT ID, Name, email, Password FROM instructors WHERE ID = ?");
-    $stmt->bind_param("s", $id);
+    $stmt = $conn->prepare("SELECT * FROM instructor WHERE Name = ? AND Password = ?");
+    $stmt->bind_param("ss", $username, $password);
+
     $stmt->execute();
-    $stmt->store_result();
+    $result = $stmt->get_result();
 
-    if ($stmt->num_rows === 1) {
-        $stmt->bind_result($instructor_id, $name, $email, $hashed_password);
-        $stmt->fetch();
-
-        if (password_verify($password, $hashed_password)) {
-            $_SESSION['instructor_id'] = $instructor_id;
-            $_SESSION['instructor_name'] = $name;
-            $_SESSION['instructor_email'] = $email;
-
-            header("Location: instructor_dashboard.php");
-            exit();
-        } else {
-            $error = "Incorrect password.";
-        }
+    if ($result->num_rows === 1) {
+        $user = $result->fetch_assoc();
+        $_SESSION['ID'] = $user['ID'];
+        header("Location: student_profile.php");
+        exit(); 
     } else {
-        $error = "Instructor ID not found.";
+        echo "Invalid Name or password!";
     }
-
-    $stmt->close();
-    $conn->close();
+    
 }
+
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Instructor Login</title>
-</head>
-<body>
-    <h2>Instructor Login</h2>
 
-    <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
 
-    <form method="POST" action="">
-        ID: <input type="text" name="id" required><br><br>
-        Password: <input type="password" name="password" required><br><br>
-        <input type="submit" value="Login">
-    </form>
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="stylesheet" href="css/student_login.css">  
+   
+    <title>Login - Online Learning Platform</title>  
+</head>  
+<body>  
+<div class="title">
+        <h1>Online Learning Platform</h1><br>  
+    </div>
+    <div class="title2">
+        <h2>For Student</h2>
+    </div>
+    <div class="login-container">  
+    <p class="welcome">Welcome</p>
+    <p class="signup">Sign Up</p>
+        
+          
+        <form action="" method="POST">  
+            <div class="form-group">  
+                <label for="Name">Name</label>  
+                <input type="text" id="Name" name="Name" placeholder="Enter your Name" required>  
+            </div>  
+            <div class="form-group">  
+                <label for="password"> Password</label>  
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>  
+            </div>  
+            <div class="form-group">  
+            <button type="submit" name="login"> Login</button> 
+            </div>  
+             
+        </form>  
+        <p class="signup">Don't have an account? <a href="instructor_signup.php"> Sign up</a> </p>  
+    </div>  
 </body>
 </html>

@@ -48,12 +48,12 @@ $check_user->close();
 
 
 
-$stmt = $conn->prepare("INSERT INTO student (Name, email, password) VALUES (?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO student (Name, password, email) VALUES (?, ?, ?)");
 $stmt->bind_param("sss", $Name, $hashed_password,  $email);
 
 if ($stmt->execute()) {
     echo "User registered successfully!";
-    header("Location: Home.php");
+    header("Location: student_login.php");
     exit();
 } else {
     http_response_code(500);

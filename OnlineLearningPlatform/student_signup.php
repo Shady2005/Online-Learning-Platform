@@ -26,10 +26,11 @@ include("database.php");
             <form action="student_submit_signup.php" method="POST">
                 <label for="Name">Name</label><br>
                 <input type="text" name="Name" placeholder="Your Name" id="Name" required><br>
-                <label for="email">Email</label><br>
-                <input type="email" name="email" placeholder="Email" id="email" required><br>
                 <label for="password">Password</label><br>
                 <input type="password" name="password" placeholder="Password" id="password" required><br>
+                <label for="email">Email</label><br>
+                <input type="email" name="email" placeholder="Email" id="email" required><br>
+                
                 <button type="submit">Sign Up</button>
             </form>
         </div>

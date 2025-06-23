@@ -15,7 +15,7 @@ if (isset($_POST['login'])) {
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
         $_SESSION['ID'] = $user['ID'];
-        header("Location: Home.php");
+        header("Location: student_profile.php");
         exit(); 
     } else {
         echo "Invalid Name or password!";
